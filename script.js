@@ -1,11 +1,16 @@
 var targetDate = new Date();
 
+//dibawah ini ketika combo boxnya berubah maka dia akan memanggil fungsi checkzona
 document.getElementById("zona").addEventListener("change", function(){
     checkZona();
 });
 
     function checkZona(){
+        //buat variabel untuk ngambil nilai dari combobox
         var selectedOption = document.getElementById("zona").value;
+
+        //kemudian buat kondisi sesuai dengan valuenya
+        //lalu tambahkan waktu sesuai dengan waktu buka
         if (selectedOption === "Medan"){
             targetDate.setHours(18);
             targetDate.setMinutes(41);
@@ -48,6 +53,9 @@ document.getElementById("zona").addEventListener("change", function(){
         } else if (selectedOption === "Yogyakarta"){
             targetDate.setHours(17);
             targetDate.setMinutes(56);
+        } else if (selectedOption === "Surabaya"){
+            targetDate.setHours(18);
+            targetDate.setMinutes(10);
         } else if (selectedOption === "Denpasar"){
             targetDate.setHours(18);
             targetDate.setMinutes(37);
@@ -113,43 +121,62 @@ document.getElementById("zona").addEventListener("change", function(){
             targetDate.setMinutes(1);
         }
 
+        //dibawah ini untuk membuat jam bukanya
+        //pertama dijadikan variabel
+        //kedua ambil id dan gunakan fungsi inner html untuk menambahkan string/text
         var jam = targetDate.getHours();
         var menit = targetDate.getMinutes();
         document.getElementById("buka").innerHTML = "Jam Buka : " + jam + ":" + menit;
-
     }
 
+    //dibawah ini function untuk membuat countdownnya
     function countdown() {
+        //buat variabel baru untuk mengambil waktu sekarang
         var currentDate = new Date();
+        //kemudian buat variabel lagi untuk jarak antara waktu sekarang dan waktu target
         var difference = targetDate - currentDate;
 
+        //kemudian buat rumus jam, menit, dan detiknya
         var hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
+        //kemudian tampilkan
         document.getElementById("countdown").innerHTML = hours + " jam " + minutes + " menit " + seconds + " detik ";
 
+        //dibawah ini kondisi untuk jika jarak waktu tadi dibawah 0
         if (difference < 0) {
-        clearInterval(interval);
+        //ubah output waktu tadi menjadi "BUKAAAAAAAAAAAAA"
         document.getElementById("countdown").innerHTML = "BUKAAAAAAAAAAA";
+        //kemudian buat variabel audio dan putar
+        var audio = document.getElementById("adzan");
+        audio.play();
+        //lalu selesaikan hitung mundurnya
+        clearInterval(interval);
         }
     }
 
     function updateTime(){
+        //deklarasikan waktu sekarang dan ambil waktu sekarang
         var currentTime = new Date();
         var hours = currentTime.getHours();
         var minutes = currentTime.getMinutes();
         var seconds = currentTime.getSeconds();
 
+        //kemudian update nilainya menggunakan operator tenary agar klo dibawah 10 jadi 08 gitu
         hours = (hours < 10 ? "0" : "") + hours;
         minutes = (minutes < 10 ? "0" : "") + minutes;
         seconds = (seconds < 10 ? "0" : "") + seconds;
 
+        //disini aku buat variabel baru untuk innernya nanti
         var currentTimeString = hours + ":" + minutes + ":" + seconds;
 
         document.getElementById("now").innerHTML = currentTimeString;
     }
 
+    //memanggil fungsi checkZona
     checkZona();
+
+    //mengupdate tiap detik function updateTime dan countDownnya
     setInterval(updateTime, 1000)
     setInterval(countdown, 1000);
